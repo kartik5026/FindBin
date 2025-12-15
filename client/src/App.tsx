@@ -13,7 +13,7 @@ function App() {
     'idle' | 'requesting' | 'ready' | 'denied' | 'error'
   >('idle')
   const [isLocating, setIsLocating] = useState(false)
-  const GPS_REQUIRED_MAX_ACCURACY_M = 80
+  const GPS_REQUIRED_MAX_ACCURACY_M = 200
   const [gpsGate, setGpsGate] = useState<
     'checking' | 'ok' | 'no_geolocation' | 'permission_denied' | 'low_accuracy' | 'error'
   >('checking')
