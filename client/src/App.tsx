@@ -12,6 +12,7 @@ function App() {
   const [geoStatus, setGeoStatus] = useState<
     'idle' | 'requesting' | 'ready' | 'denied' | 'error'
   >('idle')
+  const [isLocating, setIsLocating] = useState(false)
   const GPS_REQUIRED_MAX_ACCURACY_M = 80
   const [gpsGate, setGpsGate] = useState<
     'checking' | 'ok' | 'no_geolocation' | 'permission_denied' | 'low_accuracy' | 'error'
@@ -72,6 +73,7 @@ function App() {
       return
     }
     setGeoStatus('requesting')
+    setIsLocating(true)
     setGpsGate('checking')
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -83,6 +85,7 @@ function App() {
         setReqLat((prev) => (prev.trim() ? prev : String(next.lat)))
         setReqLng((prev) => (prev.trim() ? prev : String(next.lng)))
         setGeoStatus('ready')
+        setIsLocating(false)
 
         // Gate: require high-accuracy location (typically GPS on phones).
         if (accuracy !== null && accuracy > GPS_REQUIRED_MAX_ACCURACY_M) {
@@ -99,6 +102,7 @@ function App() {
           setGeoStatus('error')
           setGpsGate('error')
         }
+        setIsLocating(false)
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     )
@@ -564,7 +568,7 @@ function App() {
                   </div>
                 )}
                 <div className="row" style={{ marginTop: 10 }}>
-                  <button className="smallBtn ghostBtn" onClick={requestLocation} disabled={geoStatus === 'requesting'}>
+                  <button className="smallBtn ghostBtn" onClick={requestLocation} disabled={isLocating}>
                     Re-detect location
                   </button>
                   <div className="muted">If this looks wrong, refresh it before navigating.</div>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import L from 'leaflet'
+import * as L from 'leaflet'
 
 type LatLng = { lat: number; lng: number }
 
