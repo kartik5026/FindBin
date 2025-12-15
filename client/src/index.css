@@ -25,7 +25,12 @@ a:hover {
 body {
   margin: 0;
   min-width: 320px;
+  /* Prefer stable viewport units on mobile */
   min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  /* Fallback for older mobile browsers (set from JS in main.tsx) */
+  min-height: calc(var(--vh, 1vh) * 100);
   background:
     radial-gradient(1200px 600px at 15% 0%, rgba(34, 197, 94, 0.20) 0%, rgba(34, 197, 94, 0) 70%),
     radial-gradient(900px 520px at 85% 10%, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0) 65%),
