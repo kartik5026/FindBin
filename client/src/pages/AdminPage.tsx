@@ -1,6 +1,7 @@
 import '../App.css'
 import { useEffect, useState } from 'react'
 import { apiGet, apiPost } from '../api'
+import { motion } from 'framer-motion'
 
 export function AdminPage() {
   const [adminEmail, setAdminEmail] = useState('')
@@ -289,7 +290,12 @@ export function AdminPage() {
   }, [adminToken, adminPanel])
 
   return (
-    <div className="grid">
+    <motion.div
+      className="grid"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+    >
       <div className="card forestCard">
         <h2 className="cardTitle">Admin panel</h2>
         <div className="muted">Manage requests, dustbins and users.</div>
@@ -525,7 +531,7 @@ export function AdminPage() {
           Admin endpoints require <code>Authorization: Bearer &lt;token&gt;</code>.
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

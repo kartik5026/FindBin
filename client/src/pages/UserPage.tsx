@@ -4,6 +4,7 @@ import { apiGet, apiPost } from '../api'
 import { MapPicker } from '../components/MapPicker'
 import { MapPickerModal } from '../components/MapPickerModal'
 import { reverseGeocode } from '../geocode'
+import { motion } from 'framer-motion'
 
 export function UserPage() {
   const [geoStatus, setGeoStatus] = useState<'idle' | 'requesting' | 'ready' | 'denied' | 'error'>('idle')
@@ -195,7 +196,12 @@ export function UserPage() {
   if (gpsGate !== 'ok') return gpsGateView
 
   return (
-    <div className="grid">
+    <motion.div
+      className="grid"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+    >
       <MapPickerModal
         open={mapModalOpen}
         initial={coords ?? { lat: 30.9702876, lng: 76.8028933 }}
@@ -208,7 +214,12 @@ export function UserPage() {
         }}
       />
 
-      <div className="card forestCard">
+      <motion.div
+        className="card forestCard"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 }}
+      >
         <h2 className="cardTitle">Nearest dustbin</h2>
         {roundedCoords && (
           <div className="kv">
@@ -254,9 +265,14 @@ export function UserPage() {
         ) : (
           <div className="msgErr">No dustbins found yet. Submit a request to add one.</div>
         )}
-      </div>
+      </motion.div>
 
-      <div className="card forestCard">
+      <motion.div
+        className="card forestCard"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.10 }}
+      >
         <h2 className="cardTitle">Request a new dustbin</h2>
         <div className="muted">Pick a point on the map and send it to the admin for approval.</div>
 
@@ -360,8 +376,8 @@ export function UserPage() {
 
         {reqMsg?.kind === 'ok' ? <div className="msgOk">{reqMsg.text}</div> : null}
         {reqMsg?.kind === 'err' ? <div className="msgErr">{reqMsg.text}</div> : null}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
