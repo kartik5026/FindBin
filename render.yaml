@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: findbin-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Set these in Render dashboard (do NOT commit secrets):
+      - key: MONGODB_URI
+        sync: false
+      - key: secret_key
+        sync: false
+
+
