@@ -97,6 +97,9 @@
 
 .forestShell {
   position: relative;
+  /* Create a stacking context so negative z-index children still appear above the page background */
+  z-index: 0;
+  isolation: isolate;
 }
 
 .forestBackdrop {
@@ -114,7 +117,9 @@
   background-size: cover, auto, auto, auto, cover;
   background-position: center, center, center, top, center;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  filter: saturate(1.05);
+  background-color: #eef6f0;
+  background-blend-mode: normal, soft-light, soft-light, normal, normal;
+  filter: saturate(1.08) contrast(1.02);
   animation: forestGlow 10s ease-in-out infinite alternate;
 }
 
@@ -132,11 +137,11 @@
 .forestLeaves {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   /* on top of backdrop but behind content */
   mix-blend-mode: multiply;
-  opacity: 0.55;
+  opacity: 0.75;
 }
 
 .forestLeaves::before,
