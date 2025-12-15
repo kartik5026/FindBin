@@ -61,7 +61,10 @@ export function MapPickerModal(props: {
             value={draft}
             initialCenter={props.initial}
             zoom={17}
-            height={Math.max(420, Math.floor(window.innerHeight * 0.75))}
+            height={Math.max(
+              420,
+              Math.floor((typeof window !== 'undefined' ? window.innerHeight : 800) * 0.75)
+            )}
             onChange={(next) => setDraft(next)}
           />
           <div className="modalHint muted">

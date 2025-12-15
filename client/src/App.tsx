@@ -37,7 +37,14 @@ function App() {
   // admin
   const [adminEmail, setAdminEmail] = useState('')
   const [adminPassword, setAdminPassword] = useState('')
-  const [adminToken, setAdminToken] = useState<string>(() => localStorage.getItem('authToken') ?? '')
+  const [adminToken, setAdminToken] = useState<string>(() => {
+    try {
+      return localStorage.getItem('authToken') ?? ''
+    } catch {
+      // Some mobile browsers/webviews can throw on localStorage access.
+      return ''
+    }
+  })
   const [adminMsg, setAdminMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null)
   const [requests, setRequests] = useState<any[]>([])
   const [requestsLoading, setRequestsLoading] = useState(false)
