@@ -9,6 +9,7 @@ export function AppLayout() {
   return (
     <div className="app forestShell">
       <div className="forestBackdrop" aria-hidden="true" />
+      <div className="forestLeaves" aria-hidden="true" />
 
       <header className="topbar topbarForest">
         <div className="brand">
