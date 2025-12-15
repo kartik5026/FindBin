@@ -1,0 +1,17 @@
+**/node_modules/
+**/dist/
+**/.env
+**/.env.*
+**/*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Vite
+client/dist/
+
+# Server build output
+server/dist/
+
+
