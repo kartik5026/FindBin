@@ -123,51 +123,43 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Hard gate: only allow the app if we have high-accuracy location.
-  if (gpsGate !== 'ok') {
-    return (
-      <div className="app">
-        <div className="card" style={{ marginTop: 24 }}>
-          <h2 className="cardTitle">GPS required</h2>
-          <div className="muted">
-            This app requires a device that can provide <b>high-accuracy</b> location (GPS). If you are on a desktop
-            without GPS, please use a phone.
-          </div>
-
-          {gpsGate === 'no_geolocation' ? (
-            <div className="msgErr">Your browser does not support Geolocation.</div>
-          ) : null}
-          {gpsGate === 'permission_denied' ? (
-            <div className="msgErr">
-              Location permission denied. Enable location permission for this site, then retry.
-            </div>
-          ) : null}
-          {gpsGate === 'low_accuracy' ? (
-            <div className="msgErr">
-              Your location accuracy is too low
-              {gpsAccuracyM !== null ? ` (~${Math.round(gpsAccuracyM)}m)` : ''}. Turn on GPS / high accuracy mode and
-              retry.
-            </div>
-          ) : null}
-          {gpsGate === 'error' || gpsGate === 'checking' ? (
-            <div className="muted" style={{ marginTop: 10 }}>
-              {gpsGate === 'checking' ? 'Checking your GPS…' : 'Could not verify GPS.'}
-            </div>
-          ) : null}
-
-          <div className="row" style={{ marginTop: 12 }}>
-            <button className="smallBtn" onClick={requestLocation} disabled={geoStatus === 'requesting'}>
-              {geoStatus === 'requesting' ? 'Detecting…' : 'Retry GPS check'}
-            </button>
-          </div>
-
-          <div className="muted" style={{ marginTop: 10 }}>
-            Required accuracy threshold: {GPS_REQUIRED_MAX_ACCURACY_M}m or better.
-          </div>
-        </div>
+  const gpsGateView = (
+    <div className="card" style={{ marginTop: 24 }}>
+      <h2 className="cardTitle">GPS required</h2>
+      <div className="muted">
+        This app requires a device that can provide <b>high-accuracy</b> location (GPS). If you are on a desktop
+        without GPS, please use a phone.
       </div>
-    )
-  }
+
+      {gpsGate === 'no_geolocation' ? (
+        <div className="msgErr">Your browser does not support Geolocation.</div>
+      ) : null}
+      {gpsGate === 'permission_denied' ? (
+        <div className="msgErr">Location permission denied. Enable location permission for this site, then retry.</div>
+      ) : null}
+      {gpsGate === 'low_accuracy' ? (
+        <div className="msgErr">
+          Your location accuracy is too low
+          {gpsAccuracyM !== null ? ` (~${Math.round(gpsAccuracyM)}m)` : ''}. Turn on GPS / high accuracy mode and retry.
+        </div>
+      ) : null}
+      {gpsGate === 'error' || gpsGate === 'checking' ? (
+        <div className="muted" style={{ marginTop: 10 }}>
+          {gpsGate === 'checking' ? 'Checking your GPS…' : 'Could not verify GPS.'}
+        </div>
+      ) : null}
+
+      <div className="row" style={{ marginTop: 12 }}>
+        <button className="smallBtn" onClick={requestLocation} disabled={isLocating}>
+          {isLocating ? 'Detecting…' : 'Retry GPS check'}
+        </button>
+      </div>
+
+      <div className="muted" style={{ marginTop: 10 }}>
+        Required accuracy threshold: {GPS_REQUIRED_MAX_ACCURACY_M}m or better.
+      </div>
+    </div>
+  )
 
   async function fillAddressFromLatLng(lat: number, lng: number) {
     setReqAddrStatus('loading')
@@ -505,37 +497,41 @@ function App() {
 
   return (
     <div className="app">
-      <MapPickerModal
-        open={mapModalOpen}
-        initial={coords ?? { lat: 30.9702876, lng: 76.8028933 }}
-        value={currentReqLatLng}
-        onClose={() => setMapModalOpen(false)}
-        onConfirm={(next) => {
-          setReqLat(String(next.lat))
-          setReqLng(String(next.lng))
-          fillAddressFromLatLng(next.lat, next.lng)
-        }}
-      />
-      <div className="topbar">
-        <div className="brand">
-          <div className="brandTitle">FindBin</div>
-          <div className="brandSub">Nearest dustbin + request approvals</div>
-        </div>
-        <div className="tabs">
-          <button
-            className={`tabBtn smallBtn ${view === 'user' ? 'tabBtnActive' : ''}`}
-            onClick={() => setView('user')}
-          >
-            User
-          </button>
-          <button
-            className={`tabBtn smallBtn ${view === 'admin' ? 'tabBtnActive' : ''}`}
-            onClick={() => setView('admin')}
-          >
-            Admin
-          </button>
-        </div>
-      </div>
+      {gpsGate !== 'ok' ? (
+        gpsGateView
+      ) : (
+        <>
+          <MapPickerModal
+            open={mapModalOpen}
+            initial={coords ?? { lat: 30.9702876, lng: 76.8028933 }}
+            value={currentReqLatLng}
+            onClose={() => setMapModalOpen(false)}
+            onConfirm={(next) => {
+              setReqLat(String(next.lat))
+              setReqLng(String(next.lng))
+              fillAddressFromLatLng(next.lat, next.lng)
+            }}
+          />
+          <div className="topbar">
+            <div className="brand">
+              <div className="brandTitle">FindBin</div>
+              <div className="brandSub">Nearest dustbin + request approvals</div>
+            </div>
+            <div className="tabs">
+              <button
+                className={`tabBtn smallBtn ${view === 'user' ? 'tabBtnActive' : ''}`}
+                onClick={() => setView('user')}
+              >
+                User
+              </button>
+              <button
+                className={`tabBtn smallBtn ${view === 'admin' ? 'tabBtnActive' : ''}`}
+                onClick={() => setView('admin')}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
 
       {view === 'user' ? (
         <div className="grid">
@@ -1074,6 +1070,8 @@ function App() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   )
