@@ -1,6 +1,6 @@
 import '../App.css'
 import { useEffect, useState } from 'react'
-import { apiGet, apiPost } from '../api'
+import { apiGet, apiPost, apiRequest } from '../api'
 import { motion } from 'framer-motion'
 
 export function AdminPage() {
@@ -163,16 +163,7 @@ export function AdminPage() {
       body.lng = lng
     }
     try {
-      const res = await fetch(`/api/admin/dustbins/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-        },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw data
+      await apiRequest<any>(`/api/admin/dustbins/${id}`, { method: 'PUT', token: adminToken, body })
       setAdminMsg({ kind: 'ok', text: 'Dustbin updated.' })
       loadDustbins()
     } catch (err: any) {
@@ -184,12 +175,7 @@ export function AdminPage() {
     if (!adminToken) return
     setAdminMsg(null)
     try {
-      const res = await fetch(`/api/admin/dustbins/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${adminToken}` },
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw data
+      await apiRequest<any>(`/api/admin/dustbins/${id}`, { method: 'DELETE', token: adminToken })
       setAdminMsg({ kind: 'ok', text: 'Dustbin deleted.' })
       loadDustbins()
     } catch (err: any) {
@@ -247,16 +233,7 @@ export function AdminPage() {
     if (!adminToken) return
     setAdminMsg(null)
     try {
-      const res = await fetch(`/api/users/admin/users/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-        },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw data
+      await apiRequest<any>(`/api/users/admin/users/${id}`, { method: 'PUT', token: adminToken, body })
       setAdminMsg({ kind: 'ok', text: 'User updated.' })
       loadUsers()
     } catch (err: any) {
@@ -268,12 +245,7 @@ export function AdminPage() {
     if (!adminToken) return
     setAdminMsg(null)
     try {
-      const res = await fetch(`/api/users/admin/users/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${adminToken}` },
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw data
+      await apiRequest<any>(`/api/users/admin/users/${id}`, { method: 'DELETE', token: adminToken })
       setAdminMsg({ kind: 'ok', text: 'User deleted.' })
       loadUsers()
     } catch (err: any) {

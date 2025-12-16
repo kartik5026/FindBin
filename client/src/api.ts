@@ -46,4 +46,22 @@ export async function apiPost<T>(
   return data as T;
 }
 
+export async function apiRequest<T>(
+  path: string,
+  opts: { method: 'PUT' | 'DELETE' | 'PATCH'; token?: string; body?: unknown }
+): Promise<T> {
+  const headers: Record<string, string> = {}
+  if (opts.token) headers.Authorization = `Bearer ${opts.token}`
+  if (opts.body !== undefined) headers['Content-Type'] = 'application/json'
+
+  const res = await fetch(withBase(path), {
+    method: opts.method,
+    headers,
+    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+  })
+  const data = (await readBody(res)) as T
+  if (!res.ok) throw data
+  return data as T
+}
+
 
